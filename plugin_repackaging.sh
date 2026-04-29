@@ -325,6 +325,7 @@ PY
 	# Step 3: Download Python dependencies as wheels
 	# ============================================
 	echo ""
+	sed -i 's/^greenlet==3\.3\.0$/greenlet==3.2.5/' requirements.txt
 	echo "=========================================="
 	echo "Step 3: Downloading dependencies"
 	echo "=========================================="
