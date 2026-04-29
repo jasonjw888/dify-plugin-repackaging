@@ -320,12 +320,15 @@ PY
 	fi
 
 	[ ! -f "requirements.txt" ] && echo "✗ Error: requirements.txt not found" && exit 1
-
+	
+	# Fix greenlet wheel compatibility for manylinux_2_17_x86_64
+	sed -i 's/^greenlet==3\.3\.0$/greenlet==3.2.5/' requirements.txt
+	grep '^greenlet==' requirements.txt || true
+	
 	# ============================================
 	# Step 3: Download Python dependencies as wheels
 	# ============================================
 	echo ""
-	sed -i 's/^greenlet==3\.3\.0$/greenlet==3.2.5/' requirements.txt
 	echo "=========================================="
 	echo "Step 3: Downloading dependencies"
 	echo "=========================================="
