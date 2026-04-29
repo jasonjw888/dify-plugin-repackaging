@@ -321,10 +321,20 @@ PY
 
 	[ ! -f "requirements.txt" ] && echo "✗ Error: requirements.txt not found" && exit 1
 	
-	# Fix greenlet wheel compatibility for manylinux_2_17_x86_64
-	sed -i 's/^greenlet==3\.3\.0$/greenlet==3.2.5/' requirements.txt
-	grep '^greenlet==' requirements.txt || true
+	echo "Before greenlet fix:"
+	grep -n '^greenlet' requirements.txt || true
 	
+	sed -i -E 's/^greenlet==3\.3\.0([[:space:]]*;.*)?$/greenlet==3.2.5\1/' requirements.txt
+	
+	echo "After greenlet fix:"
+	grep -n '^greenlet' requirements.txt || true
+	
+	if grep -q 'greenlet==3\.3\.0' requirements.txt; then
+	  echo "✗ Error: greenlet is still pinned to 3.3.0"
+	  sed -n '1,80p' requirements.txt
+	  exit 1
+	fi
+		
 	# ============================================
 	# Step 3: Download Python dependencies as wheels
 	# ============================================
